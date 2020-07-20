@@ -159,6 +159,7 @@ static void decodefmt(char *path, int *fmt)
         else if (!strcmp(p,"#sbf"  )) *fmt=STRFMT_SEPT;
         else if (!strcmp(p,"#cmr"  )) *fmt=STRFMT_CMR;
         else if (!strcmp(p,"#tersus")) *fmt=STRFMT_TERSUS;
+        else if (!strcmp(p,"#unicore")) *fmt=STRFMT_UNICORE;
         else return;
         *p='\0';
     }

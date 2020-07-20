@@ -9,7 +9,7 @@ SRC    = ../../../src
 INCLUDE= -I$(SRC)
 OPTIONS= -DTRACE -DENAGLO -DENAQZS -DENAGAL -DENACMP -DENAIRN -DNFREQ=7 -DNEXOBS=3
 
-CFLAGS = -O3 -ansi -pedantic -Wall -Wno-unused-but-set-variable $(INCLUDE) $(OPTIONS) -g
+CFLAGS = -ansi -pedantic -Wall -Wno-unused-but-set-variable $(INCLUDE) $(OPTIONS) -g
 
 LDLIBS = -lm -lrt
 
@@ -18,7 +18,7 @@ all  : convbin
 convbin    : convbin.o rtkcmn.o rinex.o sbas.o preceph.o rcvraw.o convrnx.o
 convbin    : rtcm.o rtcm2.o rtcm3.o rtcm3e.o pntpos.o ephemeris.o ionex.o
 convbin    : novatel.o ss2.o ublox.o crescent.o skytraq.o gw10.o javad.o nvs.o
-convbin    : binex.o rt17.o qzslex.o septentrio.o cmr.o tersus.o
+convbin    : binex.o rt17.o qzslex.o septentrio.o cmr.o tersus.o unicorecomm.o fallback.o
 
 convbin.o  : ../convbin.c
 	$(CC) -c $(CFLAGS) ../convbin.c
@@ -76,6 +76,10 @@ cmr.o      : $(SRC)/rcv/cmr.c
 	$(CC) -c $(CFLAGS) $(SRC)/rcv/cmr.c
 tersus.o   : $(SRC)/rcv/tersus.c
 	$(CC) -c $(CFLAGS) $(SRC)/rcv/tersus.c
+unicorecomm.o   : $(SRC)/rcv/unicorecomm.c
+	$(CC) -c $(CFLAGS) $(SRC)/rcv/unicorecomm.c
+fallback.o : $(SRC)/rcv/fallback.c
+	$(CC) -c $(CFLAGS) $(SRC)/rcv/fallback.c
 
 convbin.o  : $(SRC)/rtklib.h
 rtkcmn.o   : $(SRC)/rtklib.h
@@ -105,6 +109,8 @@ qzslex.o   : $(SRC)/rtklib.h
 septentrio.o: $(SRC)/rtklib.h
 cmr.o      : $(SRC)/rtklib.h
 tersus.o   : $(SRC)/rtklib.h
+unicorecomm.o   : $(SRC)/rtklib.h
+fallback.o : $(SRC)/rtklib.h
 
 DATDIR = ../../../test/data/rcvraw
 

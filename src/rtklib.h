@@ -443,16 +443,17 @@ extern "C" {
 #define STRFMT_SEPT  13                 /* stream format: Septentrio */
 #define STRFMT_CMR   14                 /* stream format: CMR/CMR+ */
 #define STRFMT_TERSUS 15                /* stream format: TERSUS */
-#define STRFMT_LEXR  16                 /* stream format: Furuno LPY-10000 */
-#define STRFMT_RINEX 17                 /* stream format: RINEX */
-#define STRFMT_SP3   18                 /* stream format: SP3 */
-#define STRFMT_RNXCLK 19                /* stream format: RINEX CLK */
-#define STRFMT_SBAS  20                 /* stream format: SBAS messages */
-#define STRFMT_NMEA  21                 /* stream format: NMEA 0183 */
+#define STRFMT_UNICORE 16               /* stream format: UNICORE */
+#define STRFMT_LEXR  17                 /* stream format: Furuno LPY-10000 */
+#define STRFMT_RINEX 18                 /* stream format: RINEX */
+#define STRFMT_SP3   19                 /* stream format: SP3 */
+#define STRFMT_RNXCLK 20                /* stream format: RINEX CLK */
+#define STRFMT_SBAS  21                 /* stream format: SBAS messages */
+#define STRFMT_NMEA  22                 /* stream format: NMEA 0183 */
 #ifndef EXTLEX
-#define MAXRCVFMT    15                 /* max number of receiver format */
+#define MAXRCVFMT    16                 /* max number of receiver format */
 #else
-#define MAXRCVFMT    16
+#define MAXRCVFMT    17
 #endif
 
 #define STR_MODE_R  0x1                 /* stream mode: read */
@@ -1646,6 +1647,7 @@ EXPORT int decode_glostr(const unsigned char *buff, geph_t *geph);
 EXPORT int decode_bds_d1(const unsigned char *buff, eph_t *eph);
 EXPORT int decode_bds_d2(const unsigned char *buff, eph_t *eph);
 EXPORT int decode_gal_inav(const unsigned char *buff, eph_t *eph);
+EXPORT int decode_fallback(int fmt, raw_t *raw);
 
 EXPORT int init_raw   (raw_t *raw, int format);
 EXPORT void free_raw  (raw_t *raw);
@@ -1672,6 +1674,7 @@ EXPORT int input_rt17  (raw_t *raw, unsigned char data);
 EXPORT int input_sbf   (raw_t *raw, unsigned char data);
 EXPORT int input_cmr   (raw_t *raw, unsigned char data);
 EXPORT int input_tersus(raw_t *raw, unsigned char data);
+EXPORT int input_unicore(raw_t *raw, unsigned char data);
 EXPORT int input_lexr  (raw_t *raw, unsigned char data);
 EXPORT int input_oem4f (raw_t *raw, FILE *fp);
 EXPORT int input_oem3f (raw_t *raw, FILE *fp);
@@ -1687,6 +1690,7 @@ EXPORT int input_rt17f (raw_t *raw, FILE *fp);
 EXPORT int input_sbff  (raw_t *raw, FILE *fp);
 EXPORT int input_cmrf  (raw_t *raw, FILE *fp);
 EXPORT int input_tersusf(raw_t *raw, FILE *fp);
+EXPORT int input_unicoref(raw_t *raw, FILE *fp);
 EXPORT int input_lexrf (raw_t *raw, FILE *fp);
 
 EXPORT int gen_ubx (const char *msg, unsigned char *buff);

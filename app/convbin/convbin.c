@@ -84,6 +84,8 @@ static const char *help[]={
 " CMR                   : CMR Type 0, 1, 2, 3, 4, CMR+ Type 1, 2, 3",
 " TERSUS                : RANGECMPB, RANGEB, GPSEPHEMB, GLOEPHEMERISB,",
 "                         BDSEPHEMERISB",
+" UNICORE               : RANGECMPB, RANGEB, GPSEPHEMB, GLOEPHEMERISB,",
+"                         BDSEPHEMERISB",
 " RINEX                 : OBS, NAV, GNAV, HNAV, LNAV, QNAV",
 "",
 " Options [default]",
@@ -111,6 +113,7 @@ static const char *help[]={
 "                  sbf  = Septentrio SBF",
 "                  cmr  = CMR/CMR+",
 "                  tersus= TERSUS",
+"                  unicore= UNICORE",
 "                  rinex= RINEX",
 "     -ro opt      receiver options",
 "     -f freq      number of frequencies [3]",
@@ -168,6 +171,7 @@ static const char *help[]={
 "     *.sbf         Septentrio SBF",
 "     *.cmr         CMR/CMR+",
 "     *.trs         TERSUS",
+"     *.unc         UNICORE",
 "     *.obs,*.*o    RINEX OBS"
 };
 /* print help ----------------------------------------------------------------*/
@@ -519,6 +523,7 @@ static int cmdopts(int argc, char **argv, rnxopt_t *opt, char **ifile,
         else if (!strcmp(fmt,"sbf"  )) format=STRFMT_SEPT;
         else if (!strcmp(fmt,"cmr"  )) format=STRFMT_CMR;
         else if (!strcmp(fmt,"tersus")) format=STRFMT_TERSUS;
+        else if (!strcmp(fmt,"unicore")) format=STRFMT_UNICORE;
         else if (!strcmp(fmt,"rinex")) format=STRFMT_RINEX;
     }
     else {
@@ -538,6 +543,7 @@ static int cmdopts(int argc, char **argv, rnxopt_t *opt, char **ifile,
         else if (!strcmp(p,".sbf"  ))  format=STRFMT_SEPT;
         else if (!strcmp(p,".cmr"  ))  format=STRFMT_CMR;
         else if (!strcmp(p,".trs"  ))  format=STRFMT_TERSUS;
+        else if (!strcmp(p,".unc"  ))  format=STRFMT_UNICORE;
         else if (!strcmp(p,".obs"  ))  format=STRFMT_RINEX;
         else if (!strcmp(p+3,"o"   ))  format=STRFMT_RINEX;
         else if (!strcmp(p+3,"O"   ))  format=STRFMT_RINEX;

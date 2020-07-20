@@ -9,14 +9,15 @@ CTARGET=
 
 #OPTION = -DENAGLO -DENAGAL -DENAQZS -DENACMP -DENAIRN -DTRACE -DNFREQ=3 -DNEXOBS=3
 OPTION = -DENAGLO -DENAGAL -DENAQZS -DENACMP -DENAIRN -DTRACE -DNFREQ=3 -DNEXOBS=3 -DSVR_REUSEADDR
-CFLAGS = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTION) $(CTARGET) -g
+#CFLAGS = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTION) $(CTARGET) -g
+CFLAGS = -Wall -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTION) $(CTARGET) -g
 LDLIBS  = -lm -lrt -lpthread
 
 all        : str2str
 str2str    : str2str.o stream.o rtkcmn.o solution.o sbas.o geoid.o
 str2str    : rcvraw.o novatel.o ublox.o ss2.o crescent.o skytraq.o gw10.o javad.o
 str2str    : nvs.o binex.o rt17.o rtcm.o rtcm2.o rtcm3.o rtcm3e.o preceph.o streamsvr.o
-str2str    : septentrio.o cmr.o tersus.o
+str2str    : septentrio.o cmr.o tersus.o unicorecomm.o fallback.o
 
 str2str.o  : ../str2str.c
 	$(CC) -c $(CFLAGS) ../str2str.c
@@ -70,6 +71,10 @@ cmr.o      : $(SRC)/rcv/cmr.c
 	$(CC) -c $(CFLAGS) $(SRC)/rcv/cmr.c
 tersus.o   : $(SRC)/rcv/tersus.c
 	$(CC) -c $(CFLAGS) $(SRC)/rcv/tersus.c
+unicorecomm.o   : $(SRC)/rcv/unicorecomm.c
+	$(CC) -c $(CFLAGS) $(SRC)/rcv/unicorecomm.c
+fallback.o : $(SRC)/rcv/fallback.c
+	$(CC) -c $(CFLAGS) $(SRC)/rcv/fallback.c
 
 str2str.o  : $(SRC)/rtklib.h
 stream.o   : $(SRC)/rtklib.h
@@ -97,6 +102,8 @@ preceph.o  : $(SRC)/rtklib.h
 septentrio.o: $(SRC)/rtklib.h
 cmr.o      : $(SRC)/rtklib.h
 tersus.o   : $(SRC)/rtklib.h
+unicorecomm.o   : $(SRC)/rtklib.h
+fallback.o : $(SRC)/rtklib.h
 
 install:
 	cp str2str $(BINDIR)

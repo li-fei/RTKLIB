@@ -1009,6 +1009,7 @@ extern int input_raw(raw_t *raw, int format, unsigned char data)
         case STRFMT_SEPT : return input_sbf  (raw,data);
         case STRFMT_CMR  : return input_cmr  (raw,data);
         case STRFMT_TERSUS: return input_tersus(raw,data);
+        case STRFMT_UNICORE: return input_unicore(raw,data);
         case STRFMT_LEXR : return input_lexr (raw,data);
     }
     return 0;
@@ -1039,6 +1040,7 @@ extern int input_rawf(raw_t *raw, int format, FILE *fp)
         case STRFMT_SEPT : return input_sbff  (raw,fp);
         case STRFMT_CMR  : return input_cmrf  (raw,fp);
         case STRFMT_TERSUS: return input_tersusf(raw,fp);
+        case STRFMT_UNICORE: return input_unicoref(raw,fp);
         case STRFMT_LEXR : return input_lexrf (raw,fp);
     }
     return -2;

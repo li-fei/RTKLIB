@@ -231,12 +231,13 @@ const char *formatstrs[32]={    /* stream format strings */
     "Septentrio",               /* 13 */
     "CMR/CMR+",                 /* 14 */
     "TERSUS",                   /* 15 */
-    "LEX Receiver",             /* 16 */
-    "RINEX",                    /* 17 */
-    "SP3",                      /* 18 */
-    "RINEX CLK",                /* 19 */
-    "SBAS",                     /* 20 */
-    "NMEA 0183",                /* 21 */
+    "UINCORE",                  /* 16 */
+    "LEX Receiver",             /* 17 */
+    "RINEX",                    /* 18 */
+    "SP3",                      /* 19 */
+    "RINEX CLK",                /* 20 */
+    "SBAS",                     /* 21 */
+    "NMEA 0183",                /* 22 */
     NULL
 };
 static char *obscodes[]={       /* observation code strings */
@@ -2905,7 +2906,7 @@ extern void tracelevel(int level)
 extern void trace(int level, const char *format, ...)
 {
     va_list ap;
-    
+
     /* print error message to stderr */
     if (level<=1) {
         va_start(ap,format); vfprintf(stderr,format,ap); va_end(ap);
@@ -2914,6 +2915,7 @@ extern void trace(int level, const char *format, ...)
     traceswap();
     fprintf(fp_trace,"%d ",level);
     va_start(ap,format); vfprintf(fp_trace,format,ap); va_end(ap);
+    va_start(ap,format); vprintf(format, ap); va_end(ap);
     fflush(fp_trace);
 }
 extern void tracet(int level, const char *format, ...)
@@ -2924,6 +2926,7 @@ extern void tracet(int level, const char *format, ...)
     traceswap();
     fprintf(fp_trace,"%d %9.3f: ",level,(tickget()-tick_trace)/1000.0);
     va_start(ap,format); vfprintf(fp_trace,format,ap); va_end(ap);
+    va_start(ap,format); vprintf(format, ap); va_end(ap);
     fflush(fp_trace);
 }
 extern void tracemat(int level, const double *A, int n, int m, int p, int q)
