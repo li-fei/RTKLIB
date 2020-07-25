@@ -676,7 +676,69 @@ static int decode_bdsephemerisb(raw_t *raw)
 /* decode bd2ephemb ----------------------------------------------------------*/
 static int decode_bd2ephemb(raw_t *raw)
 {
-    trace(2,"unicore bd2ephemb not supported\n");
+    eph_t eph={0};
+    unsigned char *p=raw->buff+UNICOREHLEN;
+    double ura;
+    char *msg;
+    int prn,toc;
+
+    trace(3,"decode_bd2ephemb: len=%d\n",raw->len);
+
+    if (raw->len<UNICOREHLEN+232) {
+        trace(2,"unicore bdsephemrisb length error: len=%d\n",raw->len);
+        return -1;
+    }
+
+    prn       =U4(p+0);     /* PRN */
+    eph.week  =U4(p+24);    /* WEEK */
+    ura       =R8(p+224);   /* URA */
+    eph.svh   =U4(p+12)&1;  /* Health */
+    eph.tgd[0]=R8(p+172);   /* TGD1 */
+    eph.tgd[1]=R8(p+180);   /* TGD2 */
+    eph.iodc  =U4(p+160);   /* AODC */
+    toc       =U4(p+164);   /* TOC */
+    eph.f0    =R8(p+188);   /* af0 */
+    eph.f1    =R8(p+196);   /* af1 */
+    eph.f2    =R8(p+204);   /* af2 */
+    eph.iode  =U4(p+16);    /* AODE */
+    eph.toes  =U4(p+32);    /* TOE */
+    eph.e     =R8(p+64);    /* ECC */
+    eph.omg   =R8(p+72);    /* w */
+    eph.deln  =R8(p+48);    /* Delta N */
+    eph.M0    =R8(p+56);    /* M0 */
+    eph.OMG0  =R8(p+144);   /* OMG0 */
+    eph.OMGd  =R8(p+152);   /* OMGd */
+    eph.i0    =R8(p+128);   /* I0 */
+    eph.idot  =R8(p+136);   /* IDOT */
+    eph.cuc   =R8(p+80);    /* cuc */
+    eph.cus   =R8(p+88);    /* cus */
+    eph.crc   =R8(p+96);    /* crc */
+    eph.crs   =R8(p+104);   /* crs */
+    eph.cic   =R8(p+112);   /* cic */
+    eph.cis   =R8(p+120);   /* cis */
+    eph.A     =R8(p+40);    /* A */
+    eph.sva   =uraindex(ura);
+    
+    if (raw->outtype) {
+        msg=raw->msgtype+strlen(raw->msgtype);
+        sprintf(msg," prn=%3d iod=%3d toes=%6.0f",prn,eph.iode,eph.toes);
+    }
+    if (!(eph.sat=satno(SYS_CMP,prn))) {
+        trace(2,"unicore bdsephemeris satellite error: prn=%d\n",prn);
+        return -1;
+    }
+    eph.toe=bdt2gpst(bdt2time(eph.week,eph.toes)); /* bdt -> gpst */
+    eph.toc=bdt2gpst(bdt2time(eph.week,toc));      /* bdt -> gpst */
+    eph.ttr=raw->time;
+    
+    if (!strstr(raw->opt,"-EPHALL")) {
+        if (timediff(raw->nav.eph[eph.sat-1].toe,eph.toe)==0.0&&
+            raw->nav.eph[eph.sat-1].iode==eph.iode&&
+            raw->nav.eph[eph.sat-1].iodc==eph.iodc) return 0; /* unchanged */
+    }
+    raw->nav.eph[eph.sat-1]=eph;
+    raw->ephsat=eph.sat;
+
     return 0;
 }
 /* decode unicore message -----------------------------------------------------*/
