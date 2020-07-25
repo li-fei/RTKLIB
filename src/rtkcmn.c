@@ -2915,7 +2915,6 @@ extern void trace(int level, const char *format, ...)
     traceswap();
     fprintf(fp_trace,"%d ",level);
     va_start(ap,format); vfprintf(fp_trace,format,ap); va_end(ap);
-    va_start(ap,format); vprintf(format, ap); va_end(ap);
     fflush(fp_trace);
 }
 extern void tracet(int level, const char *format, ...)
@@ -2926,7 +2925,6 @@ extern void tracet(int level, const char *format, ...)
     traceswap();
     fprintf(fp_trace,"%d %9.3f: ",level,(tickget()-tick_trace)/1000.0);
     va_start(ap,format); vfprintf(fp_trace,format,ap); va_end(ap);
-    va_start(ap,format); vprintf(format, ap); va_end(ap);
     fflush(fp_trace);
 }
 extern void tracemat(int level, const double *A, int n, int m, int p, int q)

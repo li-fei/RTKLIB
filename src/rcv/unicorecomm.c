@@ -718,7 +718,7 @@ static int decode_bd2ephemb(raw_t *raw)
     eph.cis   =R8(p+120);   /* cis */
     eph.A     =R8(p+40);    /* A */
     eph.sva   =uraindex(ura);
-    
+
     if (raw->outtype) {
         msg=raw->msgtype+strlen(raw->msgtype);
         sprintf(msg," prn=%3d iod=%3d toes=%6.0f",prn,eph.iode,eph.toes);
@@ -730,7 +730,7 @@ static int decode_bd2ephemb(raw_t *raw)
     eph.toe=bdt2gpst(bdt2time(eph.week,eph.toes)); /* bdt -> gpst */
     eph.toc=bdt2gpst(bdt2time(eph.week,toc));      /* bdt -> gpst */
     eph.ttr=raw->time;
-    
+
     if (!strstr(raw->opt,"-EPHALL")) {
         if (timediff(raw->nav.eph[eph.sat-1].toe,eph.toe)==0.0&&
             raw->nav.eph[eph.sat-1].iode==eph.iode&&
