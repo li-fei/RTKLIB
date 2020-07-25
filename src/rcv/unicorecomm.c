@@ -26,7 +26,6 @@
 #define ID_GPSEPHEM 7           /* message id: unicore gps ephemeris */
 #define ID_GLOEPHEMERIS 723     /* message id: unicore glonass ephemeris */
 #define ID_GALEPHEMERIS 1122    /* message id: unicore galileo ephemeris */
-#define ID_BDSEPHEMERIS 1696    /* message id: unicore beidou ephemeris BX306 */
 #define ID_BD2EPHEM 1047        /* message id: unicore beidou ephemeris BX305 */
 #define ID_EVENTALL 308         /* message id: unicore eventall position & time information */
 
@@ -606,73 +605,6 @@ static int decode_galephemerisb(raw_t *raw)
     raw->ephsat=eph.sat;
     return 2;
 }
-/* decode bdsephemeris -------------------------------------------------------*/
-static int decode_bdsephemerisb(raw_t *raw)
-{
-    eph_t eph={0};
-    unsigned char *p=raw->buff+UNICOREHLEN;
-    double ura,sqrtA;
-    char *msg;
-    int prn,toc;
-    
-    trace(3,"decode_bdsephemerisb: len=%d\n",raw->len);
-    
-    if (raw->len<UNICOREHLEN+196) {
-        trace(2,"unicore bdsephemrisb length error: len=%d\n",raw->len);
-        return -1;
-    }
-    prn       =U4(p)-160; p+=4;
-    eph.week  =U4(p);   p+=4;
-    ura       =R8(p);   p+=8;
-    eph.svh   =U4(p)&1; p+=4;
-    eph.tgd[0]=R8(p);   p+=8; /* TGD1 for B1 (s) */
-    eph.tgd[1]=R8(p);   p+=8; /* TGD2 for B2 (s) */
-    eph.iodc  =U4(p);   p+=4; /* AODC */
-    toc       =U4(p);   p+=4;
-    eph.f0    =R8(p);   p+=8;
-    eph.f1    =R8(p);   p+=8;
-    eph.f2    =R8(p);   p+=8;
-    eph.iode  =U4(p);   p+=4; /* AODE */
-    eph.toes  =U4(p);   p+=4;
-    sqrtA     =R8(p);   p+=8;
-    eph.e     =R8(p);   p+=8;
-    eph.omg   =R8(p);   p+=8;
-    eph.deln  =R8(p);   p+=8;
-    eph.M0    =R8(p);   p+=8;
-    eph.OMG0  =R8(p);   p+=8;
-    eph.OMGd  =R8(p);   p+=8;
-    eph.i0    =R8(p);   p+=8;
-    eph.idot  =R8(p);   p+=8;
-    eph.cuc   =R8(p);   p+=8;
-    eph.cus   =R8(p);   p+=8;
-    eph.crc   =R8(p);   p+=8;
-    eph.crs   =R8(p);   p+=8;
-    eph.cic   =R8(p);   p+=8;
-    eph.cis   =R8(p);
-    eph.A     =sqrtA*sqrtA;
-    eph.sva   =uraindex(ura);
-    
-    if (raw->outtype) {
-        msg=raw->msgtype+strlen(raw->msgtype);
-        sprintf(msg," prn=%3d iod=%3d toes=%6.0f",prn,eph.iode,eph.toes);
-    }
-    if (!(eph.sat=satno(SYS_CMP,prn))) {
-        trace(2,"unicore bdsephemeris satellite error: prn=%d\n",prn);
-        return -1;
-    }
-    eph.toe=bdt2gpst(bdt2time(eph.week,eph.toes)); /* bdt -> gpst */
-    eph.toc=bdt2gpst(bdt2time(eph.week,toc));      /* bdt -> gpst */
-    eph.ttr=raw->time;
-    
-    if (!strstr(raw->opt,"-EPHALL")) {
-        if (timediff(raw->nav.eph[eph.sat-1].toe,eph.toe)==0.0&&
-            raw->nav.eph[eph.sat-1].iode==eph.iode&&
-            raw->nav.eph[eph.sat-1].iodc==eph.iodc) return 0; /* unchanged */
-    }
-    raw->nav.eph[eph.sat-1]=eph;
-    raw->ephsat=eph.sat;
-    return 2;
-}
 /* decode bd2ephemb ----------------------------------------------------------*/
 static int decode_bd2ephemb(raw_t *raw)
 {
@@ -772,7 +704,6 @@ static int decode_unicore(raw_t *raw)
         case ID_GPSEPHEM      : return decode_gpsephemb    (raw);
         case ID_GLOEPHEMERIS  : return decode_gloephemerisb(raw);
         case ID_GALEPHEMERIS  : return decode_galephemerisb(raw);
-        case ID_BDSEPHEMERIS  : return decode_bdsephemerisb(raw);
         case ID_BD2EPHEM      : return decode_bd2ephemb    (raw);
         default               : return decode_fallback     (STRFMT_UNICORE, raw);
     }
