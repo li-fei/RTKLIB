@@ -123,7 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
         StreamC[i]=Stream[i]=Format[i]=0;
     }
     for (int i=0;i<3;i++) {
-        CmdEna[i][0]=CmdEna[i][1]=0;
+        CmdEna[i][0]=CmdEna[i][1]=CmdEna[i][2]=0;
     }
 
     TimeSys=SolType=PlotType1=PlotType2=FreqType1=FreqType2=0;
@@ -508,7 +508,7 @@ void  MainWindow::BtnInputStrClick()
         /* Paths[0]:serial,[1]:tcp,[2]:file,[3]:ftp */
         for (j=0;j<4;j++) inputStrDialog->Paths[i][j]=Paths[i][j];
     }
-    for (i=0;i<3;i++) for (j=0;j<2;j++) {
+    for (i=0;i<3;i++) for (j=0;j<3;j++) {
         inputStrDialog->CmdEna   [i][j]=CmdEna   [i][j];
         inputStrDialog->Cmds     [i][j]=Cmds     [i][j];
         inputStrDialog->CmdEnaTcp[i][j]=CmdEnaTcp[i][j];
@@ -536,7 +536,7 @@ void  MainWindow::BtnInputStrClick()
         RcvOpt [i]=inputStrDialog->RcvOpt[i];
         for (j=0;j<4;j++) Paths[i][j]=inputStrDialog->Paths[i][j];
     }
-    for (i=0;i<3;i++) for (j=0;j<2;j++) {
+    for (i=0;i<3;i++) for (j=0;j<3;j++) {
         CmdEna   [i][j]=inputStrDialog->CmdEna   [i][j];
         Cmds     [i][j]=inputStrDialog->Cmds     [i][j];
         CmdEnaTcp[i][j]=inputStrDialog->CmdEnaTcp[i][j];
@@ -1043,15 +1043,17 @@ void  MainWindow::SvrStart(void)
     }
     for (i=0;i<3;i++) {
         cmds[i]=new char[1024];
-        cmds_periodic[i]=new char[1024]; //FIXME: add support of periodic commands
+        cmds_periodic[i]=new char[1024];
         rcvopts[i]=new char[1024];
         cmds[i][0]=cmds_periodic[i][0]=rcvopts[i][0]='\0';
         if (strs[i]==STR_SERIAL) {
             if (CmdEna[i][0]) strcpy(cmds[i],qPrintable(Cmds[i][0]));
+            if (CmdEna[i][2]) strcpy(cmds_periodic[i],qPrintable(Cmds[i][2]));
         }
         else if (strs[i]==STR_TCPCLI||strs[i]==STR_TCPSVR||
                  strs[i]==STR_NTRIPCLI) {
             if (CmdEnaTcp[i][0]) strcpy(cmds[i],qPrintable(CmdsTcp[i][0]));
+            if (CmdEnaTcp[i][2]) strcpy(cmds_periodic[i],qPrintable(CmdsTcp[i][2]));
         }
         strcpy(rcvopts[i],qPrintable(RcvOpt[i]));
     }
@@ -2235,12 +2237,12 @@ void  MainWindow::LoadOpt(void)
     for (i=0;i<3;i++) {
         RcvOpt [i]=settings.value(QString("stream/rcvopt%1").arg(i+1),"").toString();
     }
-    for (i=0;i<3;i++) for (j=0;j<2;j++) {
+    for (i=0;i<3;i++) for (j=0;j<3;j++) {
         Cmds[i][j]=settings.value(QString("serial/cmd_%1_%2").arg(i).arg(j),"").toString();
         CmdEna[i][j]=settings.value(QString("serial/cmdena_%1_%2").arg(i).arg(j),0).toInt();
         Cmds[i][j].replace("@@","\r\n");
     }
-    for (i=0;i<3;i++) for (j=0;j<2;j++) {
+    for (i=0;i<3;i++) for (j=0;j<3;j++) {
         CmdsTcp[i][j]=settings.value(QString("tcpip/cmd_%1_%2").arg(i).arg(j),"").toString();
         CmdEnaTcp[i][j]=settings.value(QString("tcpip/cmdena_%1_%2").arg(i).arg(j),0).toInt();
         CmdsTcp[i][j].replace("@@","\r\n");
@@ -2435,12 +2437,12 @@ void  MainWindow::SaveOpt(void)
     for (i=0;i<3;i++) {
         settings.setValue(QString("stream/rcvopt%1").arg(i+1),RcvOpt[i]);
     }
-    for (i=0;i<3;i++) for (j=0;j<2;j++) {
+    for (i=0;i<3;i++) for (j=0;j<3;j++) {
         Cmds[i][j].replace("\r\n","@@");
         settings.setValue(QString("serial/cmd_%1_%2").arg(i).arg(j),Cmds  [i][j]);
         settings.setValue(QString("serial/cmdena_%1_%2").arg(i).arg(j),CmdEna[i][j]);
     }
-    for (i=0;i<3;i++) for (j=0;j<2;j++) {
+    for (i=0;i<3;i++) for (j=0;j<3;j++) {
         CmdsTcp[i][j].replace("\r\n","@@");
         settings.setValue (QString("tcpip/cmd_%1_%2").arg(i).arg(j),CmdsTcp  [i][j]);
         settings.setValue(QString("tcpip/cmdena_%1_%2").arg(i).arg(j),CmdEnaTcp[i][j]);
