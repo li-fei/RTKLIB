@@ -705,7 +705,7 @@ static int decode_unicore(raw_t *raw)
         case ID_GLOEPHEMERIS  : return decode_gloephemerisb(raw);
         case ID_GALEPHEMERIS  : return decode_galephemerisb(raw);
         case ID_BD2EPHEM      : return decode_bd2ephemb    (raw);
-        default               : return decode_fallback     (STRFMT_UNICORE, raw);
+        //default               : return decode_fallback     (STRFMT_UNICORE, raw);
     }
     return 0;
 }
