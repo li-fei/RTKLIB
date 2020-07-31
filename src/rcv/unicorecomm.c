@@ -158,11 +158,12 @@ static int decode_trackstat(unsigned int stat, int *sys, int *code, int *track,
     }
     else if (*sys==SYS_CMP) {
         switch (sigtype) {
-            case  0: freq=0; *code=CODE_L1I; break; /* B1 with D1 */
-            case  1: freq=1; *code=CODE_L7I; break; /* B2 with D1 */
-            case  4: freq=0; *code=CODE_L1I; break; /* B1 with D2 */
-            case  5: freq=1; *code=CODE_L7I; break; /* B2 with D2 */
-            case 21: freq=2; *code=CODE_L6I; break; /* B3 */
+            case  0: freq=0; *code=CODE_L1I; break; /* B1I */
+            case  4: freq=0; *code=CODE_L1I; break; /* B1Q */
+            case  6: freq=2; *code=CODE_L6Q; break; /* B3Q */
+            case  5: freq=1; *code=CODE_L7Q; break; /* B2Q */
+            case 17: freq=1; *code=CODE_L7I; break; /* B2I */
+            case 21: freq=2; *code=CODE_L6I; break; /* B3I */
             default: freq=-1; break;
         }
     }
@@ -233,7 +234,6 @@ static int decode_rangeb(raw_t *raw)
         
         prn=U2(p);
         if      (sys==SYS_GLO) prn-=37;
-        else if (sys==SYS_CMP) prn-=160;
         
         if (!(sat=satno(sys,prn))) {
             trace(3,"unicore rangeb satellite number error: sys=%d,prn=%d\n",sys,prn);
@@ -315,7 +315,6 @@ static int decode_rangecmpb(raw_t *raw)
         
         prn=U1(p+17);
         if      (sys==SYS_GLO) prn-=37;
-        else if (sys==SYS_CMP) prn-=160;
         
         if (!(sat=satno(sys,prn))) {
             trace(3,"unicore rangecmpb satellite number error: sys=%d,prn=%d\n",sys,prn);
@@ -705,7 +704,7 @@ static int decode_unicore(raw_t *raw)
         case ID_GLOEPHEMERIS  : return decode_gloephemerisb(raw);
         case ID_GALEPHEMERIS  : return decode_galephemerisb(raw);
         case ID_BD2EPHEM      : return decode_bd2ephemb    (raw);
-        //default               : return decode_fallback     (STRFMT_UNICORE, raw);
+        /*default               : return decode_fallback     (STRFMT_UNICORE, raw);*/
     }
     return 0;
 }
