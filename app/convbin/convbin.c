@@ -349,7 +349,7 @@ static int cmdopts(int argc, char **argv, rnxopt_t *opt, char **ifile,
     opt->navsys=SYS_GPS|SYS_GLO|SYS_GAL|SYS_QZS|SYS_SBS|SYS_CMP;
     opt->scanobs=1;
     
-    for (i=0;i<6;i++) for (j=0;j<64;j++) opt->mask[i][j]='1';
+    for (i=0;i<7;i++) for (j=0;j<64;j++) opt->mask[i][j]='1';
     
     for (i=1;i<argc;i++) {
         if (!strcmp(argv[i],"-ts")&&i+2<argc) {
