@@ -425,7 +425,7 @@ void MainWindow::BtnTime2Click()
 void MainWindow::BtnInFileClick()
 {    
     InFile->setCurrentText(QDir::toNativeSeparators(QFileDialog::getOpenFileName(this,tr("Input RTCM, RCV RAW or RINEX OBS File"),QString(),
-         tr("All (*.*);;RTCM 2 (*.rtcm2);;RTCM 3 (*.rtcm3);;NovtAtel (*.gps);;ublox (*.ubx);;SuperStart II (*.log);;"
+         tr("All (*.*);;RTCM 2 (*.rtcm2);;RTCM 3 (*.rtcm3);;NovtAtel (*.gps);;ublox (*.ubx);;Unicore (*.unc);;SuperStart II (*.log);;"
             "Hemisphere (*.bin);;Javad (*.jps);;RINEX OBS (*.obs *.*O);Septentrio (*.sbf)"))));
     SetOutFiles(InFile->currentText());
 }
@@ -971,7 +971,7 @@ void MainWindow::LoadOpt(void)
     Comment[0]          =ini.value ("opt/comment0",   "").toString();
     Comment[1]          =ini.value ("opt/comment1",   "").toString();
     RcvOption           =ini.value ("opt/rcvoption",  "").toString();
-    NavSys              =ini.value ("opt/navsys",    0x3).toInt();
+    NavSys              =ini.value ("opt/navsys",   0x3f).toInt();
     ObsType             =ini.value ("opt/obstype",   0xF).toInt();
     FreqType            =ini.value ("opt/freqtype",  0x3).toInt();
     ExSats              =ini.value ("opt/exsats",     "").toString();
