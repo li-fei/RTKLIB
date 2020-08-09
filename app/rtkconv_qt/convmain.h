@@ -26,12 +26,12 @@ class ConversionThread : public QThread
 {
     Q_OBJECT
 public:
-    char ifile[1024],*ofile[7];
+    char ifile[1024],*ofile[9];
     rnxopt_t rnxopt;
     int format;
 
     explicit ConversionThread(QObject *parent):QThread(parent){
-        for (int i=0;i<7;i++)
+        for (int i=0;i<9;i++)
         {
             ofile[i]=new char[1024];
             ofile[i][0]='\0';
@@ -42,7 +42,7 @@ public:
     }
 
     ~ConversionThread() {
-        for (int i=0;i<7;i++) delete[] ofile[i];
+        for (int i=0;i<9;i++) delete[] ofile[i];
     }
 
 protected:
