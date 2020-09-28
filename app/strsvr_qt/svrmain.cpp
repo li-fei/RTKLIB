@@ -596,7 +596,7 @@ void MainForm::SvrStart(void)
         matcpy(conv[i]->out.sta.del,AntOff,3,1);
     }
     // stream server start
-    if (!strsvrstart(&strsvr,opt,strs,paths,conv,(char **)cmd,AntPos)) return;
+    if (!strsvrstart(&strsvr,opt,strs,paths,conv,NULL,(char **)cmd,AntPos)) return;
     
     StartTime=utc2gpst(timeget());
     Panel1    ->setEnabled(false);
