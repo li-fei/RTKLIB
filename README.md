@@ -2,7 +2,8 @@
 
 ## 简介
 
-  RTKLIB
+  RTKLIB: An Open Source Program Package for GNSS Positioning
+
 
 ## status
 
