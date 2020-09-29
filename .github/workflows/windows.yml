@@ -2,6 +2,8 @@ name: Windows
 on: 
   # push代码时触发workflow
   push:
+    branches:    
+      - windows
     # 忽略README.md
     paths-ignore:
       - 'README.md'
